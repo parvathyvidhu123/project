@@ -1,0 +1,387 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+from datetime import datetime, timedelta
+import math
+import random
+
+class WeatherDataset:
+    """Simulated weather dataset for different districts"""
+    
+    def __init__(self):
+        self.districts = {
+            # All 14 Kerala Districts
+            'thiruvananthapuram': {
+                'country': 'IN', 'temp': 29, 'feels_like': 32, 'temp_min': 25, 'temp_max': 33,
+                'humidity': 78, 'pressure': 1009, 'visibility': 7000, 'wind_speed': 4.2,
+                'wind_deg': 200, 'clouds': 55, 'weather': 'Clouds', 'description': 'broken clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'kollam': {
+                'country': 'IN', 'temp': 28, 'feels_like': 31, 'temp_min': 24, 'temp_max': 32,
+                'humidity': 77, 'pressure': 1009, 'visibility': 7500, 'wind_speed': 3.9,
+                'wind_deg': 195, 'clouds': 50, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'pathanamthitta': {
+                'country': 'IN', 'temp': 27, 'feels_like': 29, 'temp_min': 23, 'temp_max': 30,
+                'humidity': 74, 'pressure': 1010, 'visibility': 8000, 'wind_speed': 3.2,
+                'wind_deg': 185, 'clouds': 45, 'weather': 'Clouds', 'description': 'few clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'alappuzha': {
+                'country': 'IN', 'temp': 29, 'feels_like': 33, 'temp_min': 26, 'temp_max': 33,
+                'humidity': 80, 'pressure': 1008, 'visibility': 7000, 'wind_speed': 4.0,
+                'wind_deg': 200, 'clouds': 60, 'weather': 'Clouds', 'description': 'broken clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'kottayam': {
+                'country': 'IN', 'temp': 27, 'feels_like': 29, 'temp_min': 23, 'temp_max': 31,
+                'humidity': 75, 'pressure': 1010, 'visibility': 8000, 'wind_speed': 3.4,
+                'wind_deg': 180, 'clouds': 48, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'idukki': {
+                'country': 'IN', 'temp': 22, 'feels_like': 22, 'temp_min': 18, 'temp_max': 26,
+                'humidity': 68, 'pressure': 1012, 'visibility': 9500, 'wind_speed': 2.8,
+                'wind_deg': 170, 'clouds': 35, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'ernakulam': {
+                'country': 'IN', 'temp': 28, 'feels_like': 31, 'temp_min': 24, 'temp_max': 32,
+                'humidity': 75, 'pressure': 1010, 'visibility': 8000, 'wind_speed': 3.5,
+                'wind_deg': 180, 'clouds': 40, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'thrissur': {
+                'country': 'IN', 'temp': 28, 'feels_like': 31, 'temp_min': 25, 'temp_max': 32,
+                'humidity': 76, 'pressure': 1010, 'visibility': 8000, 'wind_speed': 3.6,
+                'wind_deg': 185, 'clouds': 42, 'weather': 'Clouds', 'description': 'few clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'palakkad': {
+                'country': 'IN', 'temp': 29, 'feels_like': 32, 'temp_min': 25, 'temp_max': 33,
+                'humidity': 72, 'pressure': 1011, 'visibility': 8500, 'wind_speed': 3.3,
+                'wind_deg': 175, 'clouds': 38, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'malappuram': {
+                'country': 'IN', 'temp': 27, 'feels_like': 30, 'temp_min': 24, 'temp_max': 31,
+                'humidity': 77, 'pressure': 1010, 'visibility': 7800, 'wind_speed': 3.7,
+                'wind_deg': 190, 'clouds': 46, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'kozhikode': {
+                'country': 'IN', 'temp': 27, 'feels_like': 30, 'temp_min': 24, 'temp_max': 31,
+                'humidity': 76, 'pressure': 1010, 'visibility': 8000, 'wind_speed': 3.8,
+                'wind_deg': 190, 'clouds': 45, 'weather': 'Clouds', 'description': 'few clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'wayanad': {
+                'country': 'IN', 'temp': 23, 'feels_like': 23, 'temp_min': 19, 'temp_max': 27,
+                'humidity': 70, 'pressure': 1012, 'visibility': 9000, 'wind_speed': 2.9,
+                'wind_deg': 165, 'clouds': 32, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'kannur': {
+                'country': 'IN', 'temp': 28, 'feels_like': 31, 'temp_min': 25, 'temp_max': 32,
+                'humidity': 78, 'pressure': 1009, 'visibility': 7600, 'wind_speed': 4.0,
+                'wind_deg': 195, 'clouds': 52, 'weather': 'Clouds', 'description': 'broken clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'kasaragod': {
+                'country': 'IN', 'temp': 28, 'feels_like': 31, 'temp_min': 25, 'temp_max': 32,
+                'humidity': 79, 'pressure': 1009, 'visibility': 7400, 'wind_speed': 4.1,
+                'wind_deg': 198, 'clouds': 54, 'weather': 'Clouds', 'description': 'broken clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            # Major Indian Cities
+            'bengaluru': {
+                'country': 'IN', 'temp': 24, 'feels_like': 24, 'temp_min': 20, 'temp_max': 28,
+                'humidity': 65, 'pressure': 1015, 'visibility': 10000, 'wind_speed': 2.8,
+                'wind_deg': 90, 'clouds': 20, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'mumbai': {
+                'country': 'IN', 'temp': 30, 'feels_like': 34, 'temp_min': 27, 'temp_max': 33,
+                'humidity': 82, 'pressure': 1008, 'visibility': 6000, 'wind_speed': 5.5,
+                'wind_deg': 270, 'clouds': 70, 'weather': 'Rain', 'description': 'light rain',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'monsoon'
+            },
+            'chennai': {
+                'country': 'IN', 'temp': 31, 'feels_like': 36, 'temp_min': 28, 'temp_max': 34,
+                'humidity': 80, 'pressure': 1007, 'visibility': 7500, 'wind_speed': 4.8,
+                'wind_deg': 150, 'clouds': 60, 'weather': 'Clouds', 'description': 'overcast clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'delhi': {
+                'country': 'IN', 'temp': 26, 'feels_like': 26, 'temp_min': 22, 'temp_max': 30,
+                'humidity': 55, 'pressure': 1012, 'visibility': 9000, 'wind_speed': 3.2,
+                'wind_deg': 45, 'clouds': 15, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'kolkata': {
+                'country': 'IN', 'temp': 32, 'feels_like': 37, 'temp_min': 28, 'temp_max': 35,
+                'humidity': 78, 'pressure': 1008, 'visibility': 7000, 'wind_speed': 4.2,
+                'wind_deg': 120, 'clouds': 55, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'hyderabad': {
+                'country': 'IN', 'temp': 28, 'feels_like': 30, 'temp_min': 24, 'temp_max': 32,
+                'humidity': 62, 'pressure': 1011, 'visibility': 9000, 'wind_speed': 3.0,
+                'wind_deg': 100, 'clouds': 30, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'pune': {
+                'country': 'IN', 'temp': 27, 'feels_like': 28, 'temp_min': 23, 'temp_max': 31,
+                'humidity': 64, 'pressure': 1012, 'visibility': 9500, 'wind_speed': 3.4,
+                'wind_deg': 260, 'clouds': 25, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'ahmedabad': {
+                'country': 'IN', 'temp': 32, 'feels_like': 35, 'temp_min': 28, 'temp_max': 36,
+                'humidity': 58, 'pressure': 1010, 'visibility': 8500, 'wind_speed': 3.8,
+                'wind_deg': 240, 'clouds': 20, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'jaipur': {
+                'country': 'IN', 'temp': 30, 'feels_like': 32, 'temp_min': 26, 'temp_max': 34,
+                'humidity': 52, 'pressure': 1011, 'visibility': 9000, 'wind_speed': 3.5,
+                'wind_deg': 60, 'clouds': 18, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'lucknow': {
+                'country': 'IN', 'temp': 28, 'feels_like': 30, 'temp_min': 24, 'temp_max': 32,
+                'humidity': 60, 'pressure': 1011, 'visibility': 8800, 'wind_speed': 3.1,
+                'wind_deg': 70, 'clouds': 22, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'chandigarh': {
+                'country': 'IN', 'temp': 25, 'feels_like': 25, 'temp_min': 21, 'temp_max': 29,
+                'humidity': 58, 'pressure': 1012, 'visibility': 9200, 'wind_speed': 2.9,
+                'wind_deg': 50, 'clouds': 20, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'bhopal': {
+                'country': 'IN', 'temp': 27, 'feels_like': 28, 'temp_min': 23, 'temp_max': 31,
+                'humidity': 61, 'pressure': 1011, 'visibility': 9000, 'wind_speed': 3.2,
+                'wind_deg': 80, 'clouds': 25, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            },
+            'guwahati': {
+                'country': 'IN', 'temp': 29, 'feels_like': 33, 'temp_min': 25, 'temp_max': 33,
+                'humidity': 76, 'pressure': 1009, 'visibility': 7500, 'wind_speed': 3.6,
+                'wind_deg': 130, 'clouds': 48, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'bhubaneswar': {
+                'country': 'IN', 'temp': 31, 'feels_like': 35, 'temp_min': 27, 'temp_max': 34,
+                'humidity': 74, 'pressure': 1009, 'visibility': 7800, 'wind_speed': 4.0,
+                'wind_deg': 140, 'clouds': 50, 'weather': 'Clouds', 'description': 'scattered clouds',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'tropical'
+            },
+            'indore': {
+                'country': 'IN', 'temp': 28, 'feels_like': 29, 'temp_min': 24, 'temp_max': 32,
+                'humidity': 59, 'pressure': 1011, 'visibility': 9100, 'wind_speed': 3.3,
+                'wind_deg': 75, 'clouds': 23, 'weather': 'Clear', 'description': 'clear sky',
+                'sunrise': 1696735200, 'sunset': 1696778400, 'forecast_pattern': 'pleasant'
+            }
+        }
+    
+    def get_weather(self, district):
+        """Get current weather for district"""
+        district_lower = district.lower().strip()
+        if district_lower not in self.districts:
+            return None
+        
+        data = self.districts[district_lower].copy()
+        data['name'] = district.title()
+        
+        # Add some random variation
+        data['temp'] += random.uniform(-2, 2)
+        data['humidity'] += random.randint(-5, 5)
+        data['wind_speed'] += random.uniform(-0.5, 0.5)
+        
+        return data
+    
+    def get_forecast(self, district):
+        """Generate forecast data for next 5 days"""
+        district_lower = district.lower().strip()
+        if district_lower not in self.districts:
+            return None
+        
+        base_data = self.districts[district_lower]
+        pattern = base_data['forecast_pattern']
+        
+        forecast_list = []
+        current_time = datetime.now()
+        
+        # Generate 40 forecast points (5 days, 8 points per day)
+        for i in range(40):
+            forecast_time = current_time + timedelta(hours=3*i)
+            
+            # Apply pattern-based variations
+            if pattern == 'monsoon':
+                weather_options = ['Rain', 'Rain', 'Clouds', 'Clouds']
+                temp_var = random.uniform(-3, 2)
+            elif pattern == 'tropical':
+                weather_options = ['Clouds', 'Clouds', 'Rain', 'Clear']
+                temp_var = random.uniform(-2, 3)
+            else:  # pleasant
+                weather_options = ['Clear', 'Clear', 'Clouds', 'Clouds']
+                temp_var = random.uniform(-2, 2)
+            
+            weather_main = random.choice(weather_options)
+            
+            forecast_point = {
+                'dt': int(forecast_time.timestamp()),
+                'main': {
+                    'temp': base_data['temp'] + temp_var + random.uniform(-1, 1),
+                    'feels_like': base_data['feels_like'] + temp_var,
+                    'humidity': base_data['humidity'] + random.randint(-10, 10),
+                    'pressure': base_data['pressure'] + random.randint(-3, 3)
+                },
+                'weather': [{
+                    'main': weather_main,
+                    'description': self.get_description(weather_main)
+                }],
+                'clouds': {'all': random.randint(10, 90)},
+                'wind': {
+                    'speed': base_data['wind_speed'] + random.uniform(-1, 1),
+                    'deg': base_data['wind_deg'] + random.randint(-30, 30)
+                }
+            }
+            
+            forecast_list.append(forecast_point)
+        
+        return {'list': forecast_list}
+    
+    def get_description(self, weather_main):
+        """Get description for weather type"""
+        descriptions = {
+            'Clear': 'clear sky',
+            'Clouds': random.choice(['few clouds', 'scattered clouds', 'broken clouds', 'overcast clouds']),
+            'Rain': random.choice(['light rain', 'moderate rain', 'light intensity drizzle']),
+            'Drizzle': 'light drizzle',
+            'Thunderstorm': 'thunderstorm',
+            'Snow': 'light snow',
+            'Mist': 'mist'
+        }
+        return descriptions.get(weather_main, 'clear sky')
+
+
+class WeatherApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Will It Rain On My Parade? 🎪")
+        
+        # Weather dataset
+        self.weather_data = WeatherDataset()
+        
+        # Make fullscreen
+        self.root.attributes('-fullscreen', True)
+        
+        # Animation control
+        self.animation_active = True
+        
+        # Setup galaxy background
+        self.setup_galaxy_background()
+        
+        # Bind keys
+        self.root.bind('<Escape>', lambda e: self.toggle_fullscreen())
+        self.root.bind('<F11>', lambda e: self.toggle_fullscreen())
+        
+        # Particle system
+        self.particles = []
+        self.shooting_stars = []
+        
+        # Create particles
+        self.create_particle_system()
+        
+        # Create UI
+        self.create_widgets()
+        
+        # Start animations
+        self.animate_particles()
+        self.animate_shooting_stars()
+    
+    def toggle_fullscreen(self):
+        current = self.root.attributes('-fullscreen')
+        self.root.attributes('-fullscreen', not current)
+    
+    def setup_galaxy_background(self):
+        """Create animated galaxy gradient background"""
+        self.bg_canvas = tk.Canvas(self.root, highlightthickness=0)
+        self.bg_canvas.place(x=0, y=0, relwidth=1, relheight=1)
+        
+        width = self.root.winfo_screenwidth() if self.root.winfo_screenwidth() > 1 else 1920
+        height = self.root.winfo_screenheight() if self.root.winfo_screenheight() > 1 else 1080
+        
+        # Multi-color gradient
+        for i in range(height):
+            ratio = i / height
+            # Ensure values are always positive and in range 0-255
+            r = max(0, min(255, int(10 + abs(20 * math.sin(ratio * math.pi * 2)))))
+            g = max(0, min(255, int(5 + (40 * ratio))))
+            b = max(0, min(255, int(40 + (50 * ratio) + abs(20 * math.sin(ratio * math.pi * 3)))))
+            color = f'#{r:02x}{g:02x}{b:02x}'
+            self.bg_canvas.create_line(0, i, width, i, fill=color)
+    
+    def create_particle_system(self):
+        """Create animated particle system"""
+        width = self.root.winfo_screenwidth() if self.root.winfo_screenwidth() > 1 else 1920
+        height = self.root.winfo_screenheight() if self.root.winfo_screenheight() > 1 else 1080
+        
+        # Twinkling stars
+        for _ in range(150):
+            x = random.randint(0, width)
+            y = random.randint(0, height)
+            size = random.choice([1, 2, 2, 3])
+            brightness = random.uniform(0.3, 1.0)
+            star = {
+                'item': self.bg_canvas.create_oval(x, y, x+size, y+size, fill='white', outline=''),
+                'brightness': brightness,
+                'fade_dir': random.choice([-1, 1]),
+                'fade_speed': random.uniform(0.02, 0.05)
+            }
+            self.particles.append(star)
+    
+    def animate_particles(self):
+        """Animate twinkling stars"""
+        if not self.animation_active:
+            return
+        
+        for star in self.particles:
+            star['brightness'] += star['fade_speed'] * star['fade_dir']
+            
+            if star['brightness'] >= 1.0:
+                star['brightness'] = 1.0
+                star['fade_dir'] = -1
+            elif star['brightness'] <= 0.3:
+                star['brightness'] = 0.3
+                star['fade_dir'] = 1
+            
+            val = int(255 * star['brightness'])
+            color = f'#{val:02x}{val:02x}{val:02x}'
+            self.bg_canvas.itemconfig(star['item'], fill=color)
+        
+        self.root.after(50, self.animate_particles)
+    
+    def animate_shooting_stars(self):
+        """Create shooting star effects"""
+        if not self.animation_active:
+            return
+        
+        if random.random() < 0.05:
+            width = self.root.winfo_screenwidth() if self.root.winfo_screenwidth() > 1 else 1920
+            height = self.root.winfo_screenheight() if self.root.winfo_screenheight() > 1 else 1080
+            
+            x = random.randint(0, width)
+            y = random.randint(0, height // 2)
+            
+            star_line = self.bg_canvas.create_line(
+                x, y, x-30, y+30,
+                fill='#00d4ff',
+                width=2
+            )
+            
+            self.shooting_s
